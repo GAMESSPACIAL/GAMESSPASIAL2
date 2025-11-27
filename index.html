@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Video di Tengah — Kontrol Kiri — Gambar Kanan</title>
 <style>
-/* ===========================
-   RESET + BODY
-   =========================== */
+/* =========================== RESET + BODY =========================== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html,body { height: 100%; }
 body{
@@ -17,9 +15,7 @@ body{
   overflow:hidden;
 }
 
-/* ===========================
-   LAYOUT KONTAINER UTAMA
-   =========================== */
+/* =========================== KONTAINER UTAMA =========================== */
 .app {
   width:100vw;
   height:100vh;
@@ -29,7 +25,7 @@ body{
   justify-content:center;
 }
 
-/* KIRI: PANEL KONTROL */
+/* =========================== KIRI: PANEL KONTROL =========================== */
 .controls {
   position: absolute;
   left: 20px;
@@ -41,16 +37,8 @@ body{
   box-shadow: 0 8px 30px rgba(0,0,0,0.18);
   z-index: 30;
 }
-.controls h3 {
-  font-size:16px;
-  margin-bottom:8px;
-  color:#222;
-}
-.controls .buttons {
-  display:flex;
-  gap:10px;
-  margin-bottom:12px;
-}
+.controls h3 { font-size:16px; margin-bottom:8px; color:#222; }
+.controls .buttons { display:flex; gap:10px; margin-bottom:12px; }
 .btn {
   flex:0 0 auto;
   display:inline-flex;
@@ -74,11 +62,10 @@ body{
 .controls label { font-size:13px; color:#444; margin-bottom:6px; display:block; }
 .controls input[type="range"] { width:100%; }
 
-/* TENGAH: KOTAK VIDEO (SQUARE) */
+/* =========================== TENGAH: VIDEO =========================== */
 .stage {
-  /* center area where video sits */
   position: relative;
-  width: min(64vmin, 580px); /* responsive square - max 580px */
+  width: min(64vmin, 580px);
   height: min(64vmin, 580px);
   display:flex;
   align-items:center;
@@ -86,30 +73,28 @@ body{
   z-index: 10;
 }
 
-/* Frame square dengan rounded corners */
+/* Container video dengan border putih */
 .video-wrap {
   width:100%;
-  height:60%;
-  border-radius:28px;         /* lengkung penuh */
-  overflow:hidden;            /* agar video ikut lengkung */
-  box-shadow:
-    0 12px 36px rgba(0,0,0,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.06);
+  height:100%;
+  border-radius:28px;
+  border: 8px solid white;       /* <<< border putih di pinggir */
+  overflow:hidden;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
   background: #000;
   position: relative;
 }
 
-/* Video element juga dibulatkan agar pinggirnya rapi */
 #spinVideo {
   width:100%;
   height:100%;
-  object-fit:cover;           /* isi penuh, tanpa mengubah aspek */
+  object-fit:cover;
   display:block;
-  border-radius:28px;         /* agar pinggir video ikut curve */
-  pointer-events: none;       /* klik pada video tidak berefek (hanya tombol kiri yg mengontrol) */
+  border-radius:20px;             /* tetap rounded di dalam */
+  pointer-events: none;
 }
 
-/* overlay tipis (mis. shimmer/gradient) */
+/* overlay tipis */
 .video-overlay {
   position:absolute;
   inset:0;
@@ -117,12 +102,12 @@ body{
   background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 60%, rgba(0,0,0,0.36) 100%);
 }
 
-/* KANAN: FRAME MINI (sisi dadu) */
+/* =========================== KANAN: FRAME MINI =========================== */
 .reference-mini {
   position: absolute;
   right: 20px;
   top: 20px;
-  width: 325px;
+  width: 220px;
   background: rgba(255,255,255,0.98);
   padding: 12px;
   border-radius: 12px;
@@ -139,9 +124,9 @@ body{
 }
 .mini-item { margin-bottom:12px; text-align:center; }
 .mini-item .label { font-size:12px; font-weight:700; color:#333; margin-bottom:6px; }
-.mini-item img { width:300px; height:auto; border-radius:8px; border:1px solid #eee; background:#fafafa; }
+.mini-item img { width:200px; height:auto; border-radius:8px; border:1px solid #eee; background:#fafafa; }
 
-/* bawah kiri: text kecil */
+/* =========================== BAWAH KIRI =========================== */
 .brand {
   position:absolute;
   left:20px;
@@ -155,7 +140,7 @@ body{
   box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
 
-/* responsive tweaks */
+/* =========================== RESPONSIVE =========================== */
 @media (max-width:920px){
   .controls { width:190px; left:14px; top:14px; padding:10px; }
   .reference-mini { right:14px; top:14px; width:160px; padding:10px; }
@@ -164,7 +149,7 @@ body{
 }
 @media (max-width:520px){
   .controls { position:fixed; left:10px; top:10px; width:170px; }
-  .reference-mini { display:none; } /* sembunyikan kanan di HP supaya muat */
+  .reference-mini { display:none; }
   .stage { width: min(82vmin, 360px); height: min(82vmin, 360px); }
 }
 </style>
@@ -175,33 +160,26 @@ body{
     <!-- KIRI: Kontrol -->
     <div class="controls" aria-label="Kontrol Video">
       <h3>🎞️ Kontrol Video</h3>
-
       <div class="buttons">
         <button class="btn" id="playPauseBtn" title="Play / Pause">⏯</button>
         <button class="btn secondary" id="resetBtn" title="Reset ke awal">🔄</button>
       </div>
-
       <div style="margin-top:8px;">
         <label for="speedRange">⚡ Kecepatan putar: <span id="speedVal">1.0</span>x</label>
         <input id="speedRange" type="range" min="0.25" max="2.5" step="0.05" value="1">
       </div>
-
       <div style="margin-top:10px; font-size:13px; color:#444;">
         <div>Loop: <strong>ON</strong></div>
-        <div style="margin-top:6px; font-size:12px; color:#666;"></div>
       </div>
     </div>
 
-    <!-- TENGAH: Video square -->
+    <!-- TENGAH: Video -->
     <div class="stage" role="main" aria-label="Area video">
       <div class="video-wrap" aria-hidden="false">
-        <!-- video sumbermu -->
         <video id="spinVideo" playsinline muted crossorigin="anonymous">
-          <source src="https://i.imgur.com/PS2WScN.mp4" type="video/mp4">
+          <source src="https://i.imgur.com/r7pdl8y.mp4" type="video/mp4">
           Browser-mu tidak mendukung video tag.
         </video>
-
-        <!-- overlay (efek gelap) -->
         <div class="video-overlay" aria-hidden="true"></div>
       </div>
     </div>
@@ -209,32 +187,21 @@ body{
     <!-- KANAN: mini images -->
     <aside class="reference-mini" aria-label="Referensi sisi dadu">
       <h4>Sisi Dadu</h4>
-
       <div class="mini-item">
         <div class="label">TAMPAK DEPAN</div>
-        <img src="https://i.imgur.com/L3TLhpp.png" alt="tampak depan dadu">
+        <img src="https://i.imgur.com/ONjZTxg.jpeg" alt="tampak depan dadu" loading="lazy">
       </div>
-
       <div class="mini-item">
         <div class="label">TAMPAK BELAKANG</div>
-        <img src="https://i.imgur.com/EYEDgU5.png" alt="tampak belakang dadu">
+        <img src="https://i.imgur.com/we9pV6W.jpeg" alt="tampak belakang dadu" loading="lazy">
       </div>
     </aside>
 
-    <!-- brand / teks bawah -->
+    <!-- brand -->
     <div class="brand">KSE UNJA</div>
   </div>
 
 <script>
-/*
-  Script kontrol video:
-  - Play/Pause tombol kiri
-  - Reset tombol
-  - Slider kecepatan (playbackRate)
-  - Cegah klik video mem-pause (pointer-events:none di CSS)
-  - Trik seamless-ish: jika mendekati akhir, loncat ke 0.04 untuk meminimalkan gap.
-*/
-
 (function(){
   const vid = document.getElementById('spinVideo');
   const playPauseBtn = document.getElementById('playPauseBtn');
@@ -242,104 +209,49 @@ body{
   const speedRange = document.getElementById('speedRange');
   const speedVal = document.getElementById('speedVal');
 
-  // default
-  vid.loop = true;            // fallback loop
-  vid.muted = true;           // autoplay lebih reliable ketika muted
+  vid.loop = true;
+  vid.muted = true;
   vid.playsInline = true;
   vid.preload = "auto";
   vid.playbackRate = parseFloat(speedRange.value);
 
   let isPlaying = false;
 
-  // Try to autoplay when loaded
   function tryAutoPlay(){
-    const p = vid.play().then(()=> {
-      isPlaying = true;
-      updatePlayBtn();
-    }).catch(()=> {
-      // autoplay might be blocked; keep paused — user can press play
-      isPlaying = false;
-      updatePlayBtn();
-    });
+    vid.play().then(()=>{ isPlaying=true; updatePlayBtn(); })
+      .catch(()=>{ isPlaying=false; updatePlayBtn(); });
   }
 
-  // Update play/pause button appearance (simple text)
-  function updatePlayBtn(){
-    playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
-  }
+  function updatePlayBtn(){ playPauseBtn.textContent = isPlaying ? '⏸' : '▶'; }
 
-  // Toggle play/pause
   playPauseBtn.addEventListener('click', function(){
-    if (!isPlaying){
-      vid.play().catch(()=>{}); // ignore
-      isPlaying = true;
-    } else {
-      vid.pause();
-      isPlaying = false;
-    }
+    if(!isPlaying){ vid.play().catch(()=>{}); isPlaying=true; }
+    else { vid.pause(); isPlaying=false; }
     updatePlayBtn();
   });
 
-  // Reset button: go to 0 and play
   resetBtn.addEventListener('click', function(){
-    // small timeout to ensure currentTime apply cross-browsers
-    try {
-      vid.currentTime = 0;
-    } catch(e){
-      // some browsers require play before setting currentTime
-      vid.pause();
-    }
-    // ensure play after reset
-    vid.play().catch(()=>{});
-    isPlaying = true;
-    updatePlayBtn();
+    try { vid.currentTime=0; } catch(e){ vid.pause(); }
+    vid.play().catch(()=>{}); isPlaying=true; updatePlayBtn();
   });
 
-  // Speed slider
   speedRange.addEventListener('input', function(){
-    const v = parseFloat(this.value);
-    vid.playbackRate = v;
-    speedVal.textContent = v.toFixed(2);
+    const v=parseFloat(this.value);
+    vid.playbackRate=v;
+    speedVal.textContent=v.toFixed(2);
   });
 
-  // Try autoplay on load
   window.addEventListener('load', tryAutoPlay);
 
-  // Improve seamless loop: when close to end, jump slightly to start
-  // (helps reduce the small 'black/stall frame' gap on some encodings/hosts)
-  // Tweak threshold if needed.
   function seamlessCheck(){
-    if (!isFinite(vid.duration) || vid.duration === 0) return;
-    const remaining = vid.duration - vid.currentTime;
-    if (remaining > 0 && remaining < 0.12) {
-      // tiny jump to avoid gap (set to small positive so not 0)
-      vid.currentTime = 0.04;
-      // ensure playing
-      if (vid.paused && isPlaying) vid.play().catch(()=>{});
-    }
+    if(!isFinite(vid.duration) || vid.duration===0) return;
+    const remaining=vid.duration-vid.currentTime;
+    if(remaining>0 && remaining<0.12){ vid.currentTime=0.04; if(vid.paused && isPlaying) vid.play().catch(()=>{}); }
   }
   vid.addEventListener('timeupdate', seamlessCheck);
-
-  // If video ends unexpectedly on some browsers, ensure restarted
-  vid.addEventListener('ended', () => {
-    // try to immediately play again
-    vid.currentTime = 0.04;
-    vid.play().catch(()=>{});
-  });
-
-  // Accessibility: keyboard control (space toggles)
-  window.addEventListener('keydown', function(e){
-    if (e.code === 'Space') {
-      e.preventDefault();
-      playPauseBtn.click();
-    }
-  });
-
-  // In case the video metadata not ready, attempt small retries
-  vid.addEventListener('loadedmetadata', function(){
-    // if it was supposed to be playing, keep playing
-    if (isPlaying) vid.play().catch(()=>{});
-  });
+  vid.addEventListener('ended', ()=>{ vid.currentTime=0.04; vid.play().catch(()=>{}); });
+  window.addEventListener('keydown', function(e){ if(e.code==='Space'){ e.preventDefault(); playPauseBtn.click(); }});
+  vid.addEventListener('loadedmetadata', ()=>{ if(isPlaying) vid.play().catch(()=>{}); });
 
 })();
 </script>
